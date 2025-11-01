@@ -1,29 +1,29 @@
-// Функция для проверки длины строки
+// Function to check string length
 const checkStringLength = (string, maxLength) => string.length <= maxLength;
 
-// Примеры использования:
+// Usage examples:
 checkStringLength('проверяемая строка', 20); // true
 checkStringLength('проверяемая строка', 18); // true
 checkStringLength('проверяемая строка', 10); // false
 
-// Функция для проверки, является ли строка палиндромом
+// Function to check if a string is a palindrome
 const isPalindrome = (string) => {
-  // Нормализуем строку: убираем пробелы и приводим к нижнему регистру
+  // Normalize the string: remove spaces and convert to lowercase
   const normalizedString = string.replaceAll(' ', '').toLowerCase();
 
-  // Создаём переменную для перевёрнутой строки
+  // Create a variable for the reversed string
   let reversedString;
 
-  // Переворачиваем строку
+  // Reverse the string
   for (let i = normalizedString.length - 1; i >= 0; i--) {
     reversedString += normalizedString[i];
   }
 
-  // Сравниваем нормализованную и перевёрнутую строки
+  // Compare normalized and reversed strings
   return normalizedString === reversedString;
 };
 
-// Примеры использования:
+// Usage examples:
 isPalindrome('топот'); // true
 isPalindrome('ДовОд'); // true
 isPalindrome('Кекс'); // false
