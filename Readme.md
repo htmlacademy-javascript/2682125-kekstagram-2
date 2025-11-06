@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Albert Galeev](https://up.htmlacademy.ru/javascript-individual/2/user/2682125).
-* Наставник: `Неизвестно`.
+* Наставник: [Амина Омарова](https://htmlacademy.ru/profile/ami).
 
 ---
 
