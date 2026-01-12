@@ -1,13 +1,13 @@
-const bigPicture = document.querySelector('.big-picture');
-const bigPictureImg = bigPicture.querySelector('.big-picture__img img');
-const likesCount = bigPicture.querySelector('.likes-count');
-const commentShownCount = bigPicture.querySelector('.social__comment-shown-count');
-const commentTotalCount = bigPicture.querySelector('.social__comment-total-count');
-const commentsContainer = bigPicture.querySelector('.social__comments');
-const socialCaption = bigPicture.querySelector('.social__caption');
-const commentCount = bigPicture.querySelector('.social__comment-count');
-const commentsLoader = bigPicture.querySelector('.comments-loader');
-const bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
+const bigPictureElement = document.querySelector('.big-picture');
+const bigPictureImgElement = bigPictureElement.querySelector('.big-picture__img img');
+const likesCountElement = bigPictureElement.querySelector('.likes-count');
+const commentShownCountElement = bigPictureElement.querySelector('.social__comment-shown-count');
+const commentTotalCountElement = bigPictureElement.querySelector('.social__comment-total-count');
+const commentsContainerElement = bigPictureElement.querySelector('.social__comments');
+const socialCaptionElement = bigPictureElement.querySelector('.social__caption');
+const commentCountElement = bigPictureElement.querySelector('.social__comment-count');
+const commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
+const bigPictureCancelElement = bigPictureElement.querySelector('.big-picture__cancel');
 
 const createComment = ({ avatar, name, message }) => {
   const comment = document.createElement('li');
@@ -31,7 +31,7 @@ const createComment = ({ avatar, name, message }) => {
 };
 
 const renderComments = (comments) => {
-  commentsContainer.innerHTML = '';
+  commentsContainerElement.innerHTML = '';
   const fragment = document.createDocumentFragment();
 
   comments.forEach((comment) => {
@@ -39,13 +39,21 @@ const renderComments = (comments) => {
     fragment.appendChild(commentElement);
   });
 
-  commentsContainer.appendChild(fragment);
+  commentsContainerElement.appendChild(fragment);
 };
 
 function closeBigPicture() {
-  bigPicture.classList.add('hidden');
+  bigPictureElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
+
+  bigPictureImgElement.src = '';
+  bigPictureImgElement.alt = '';
+  likesCountElement.textContent = '';
+  commentTotalCountElement.textContent = '';
+  commentShownCountElement.textContent = '';
+  socialCaptionElement.textContent = '';
+  commentsContainerElement.innerHTML = '';
 }
 
 function onDocumentKeydown(evt) {
@@ -60,24 +68,24 @@ const onCancelButtonClick = () => {
 };
 
 const openBigPicture = ({ url, description, likes, comments }) => {
-  bigPicture.classList.remove('hidden');
+  bigPictureElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
-  bigPictureImg.src = url;
-  bigPictureImg.alt = description;
-  likesCount.textContent = likes;
-  commentTotalCount.textContent = comments.length;
-  commentShownCount.textContent = comments.length;
-  socialCaption.textContent = description;
+  bigPictureImgElement.src = url;
+  bigPictureImgElement.alt = description;
+  likesCountElement.textContent = likes;
+  commentTotalCountElement.textContent = comments.length;
+  commentShownCountElement.textContent = comments.length;
+  socialCaptionElement.textContent = description;
 
   renderComments(comments);
 
-  commentCount.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
+  commentCountElement.classList.add('hidden');
+  commentsLoaderElement.classList.add('hidden');
 
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-bigPictureCancel.addEventListener('click', onCancelButtonClick);
+bigPictureCancelElement.addEventListener('click', onCancelButtonClick);
 
 export { openBigPicture };
