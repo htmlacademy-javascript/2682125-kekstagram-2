@@ -1,7 +1,25 @@
 import { renderThumbnails } from './render-thumbnails.js';
-import { getPhotos } from './data.js';
+import { getData } from './api.js';
 import './form.js';
 
-const photos = getPhotos();
+const showDataError = () => {
+  const template = document.querySelector('#data-error').content.querySelector('.data-error');
+  const errorElement = template.cloneNode(true);
 
-renderThumbnails(photos);
+  document.body.append(errorElement);
+
+  setTimeout(() => {
+    errorElement.remove();
+  }, 5000);
+};
+
+const init = async () => {
+  try {
+    const photos = await getData();
+    renderThumbnails(photos);
+  } catch (err) {
+    showDataError();
+  }
+};
+
+init();

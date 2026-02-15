@@ -1,3 +1,5 @@
+import { sendData } from './api.js';
+
 const MAX_HASHTAG_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
 const SCALE_STEP = 25;
@@ -59,6 +61,66 @@ const effectLevelElement = document.querySelector('.img-upload__effect-level');
 const effectValueElement = document.querySelector('.effect-level__value');
 const effectSliderElement = document.querySelector('.effect-level__slider');
 const previewImageElement = document.querySelector('.img-upload__preview img');
+
+const successTemplate = document.querySelector('#success').content.querySelector('.success');
+const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+
+const MessageType = {
+  SUCCESS: 'success',
+  ERROR: 'error',
+};
+
+let activeMessage = null;
+let onMessageKeydown = null;
+
+const removeActiveMessage = () => {
+  if (!activeMessage) {
+    return;
+  }
+
+  activeMessage.remove();
+  document.removeEventListener('keydown', onMessageKeydown);
+  activeMessage = null;
+  onMessageKeydown = null;
+};
+
+const showMessage = (type) => {
+  removeActiveMessage();
+
+  const template = type === MessageType.SUCCESS ? successTemplate : errorTemplate;
+  const messageElement = template.cloneNode(true);
+
+  const closeButton = messageElement.querySelector('button');
+
+  const onOverlayClick = (evt) => {
+    if (evt.target === messageElement) {
+      removeActiveMessage();
+    }
+  };
+
+  onMessageKeydown = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      evt.stopPropagation();
+      removeActiveMessage();
+    }
+  };
+
+  const onCloseButtonClick = () => {
+    removeActiveMessage();
+  };
+
+  closeButton.addEventListener('click', onCloseButtonClick);
+  messageElement.addEventListener('click', onOverlayClick);
+  document.addEventListener('keydown', onMessageKeydown);
+
+  document.body.append(messageElement);
+
+  activeMessage = messageElement;
+};
+
+const showSuccessMessage = () => showMessage(MessageType.SUCCESS);
+const showErrorMessage = () => showMessage(MessageType.ERROR);
 
 let currentEffect = 'none';
 
@@ -210,6 +272,7 @@ const resetForm = () => {
   formElement.reset();
   pristine.reset();
   resetEditor();
+  previewImageElement.src = 'img/upload-default-image.jpg';
 };
 
 const closeForm = () => {
@@ -220,6 +283,10 @@ const closeForm = () => {
 };
 
 function onDocumentKeydown(evt) {
+  if (activeMessage) {
+    return;
+  }
+
   if (evt.key === 'Escape') {
     evt.preventDefault();
     closeForm();
@@ -262,13 +329,27 @@ const onCancelButtonClick = () => {
   closeForm();
 };
 
-const onFormSubmit = (evt) => {
+const onFormSubmit = async (evt) => {
   evt.preventDefault();
 
   const isValid = pristine.validate();
 
   if (isValid) {
-    formElement.submit();
+    const submitButton = formElement.querySelector('.img-upload__submit');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Публикую...';
+
+    try {
+      const formData = new FormData(formElement);
+      await sendData(formData);
+      showSuccessMessage();
+      closeForm();
+    } catch (err) {
+      showErrorMessage();
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = 'Опубликовать';
+    }
   }
 };
 
