@@ -64,8 +64,8 @@ const effectSliderElement = document.querySelector('.effect-level__slider');
 const previewImageElement = document.querySelector('.img-upload__preview img');
 const effectsPreviewElements = document.querySelectorAll('.effects__preview');
 
-const successTemplate = document.querySelector('#success').content.querySelector('.success');
-const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+const successTemplateElement = document.querySelector('#success').content.querySelector('.success');
+const errorTemplateElement = document.querySelector('#error').content.querySelector('.error');
 
 const MessageType = {
   SUCCESS: 'success',
@@ -90,7 +90,7 @@ const removeActiveMessage = () => {
 const showMessage = (type) => {
   removeActiveMessage();
 
-  const template = type === MessageType.SUCCESS ? successTemplate : errorTemplate;
+  const template = type === MessageType.SUCCESS ? successTemplateElement : errorTemplateElement;
   const messageElement = template.cloneNode(true);
 
   const closeButton = messageElement.querySelector('button');

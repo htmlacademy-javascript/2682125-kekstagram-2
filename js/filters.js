@@ -14,6 +14,7 @@ const filtersContainerElement = document.querySelector('.img-filters');
 const filtersFormElement = document.querySelector('.img-filters__form');
 
 let currentFilter = Filter.DEFAULT;
+let activeFilterButton = null;
 let photos = [];
 
 const getRandomPhotos = (items) => {
@@ -60,8 +61,11 @@ const onFilterClick = (evt) => {
     return;
   }
 
-  filtersFormElement.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
+  if (activeFilterButton) {
+    activeFilterButton.classList.remove('img-filters__button--active');
+  }
   clickedButton.classList.add('img-filters__button--active');
+  activeFilterButton = clickedButton;
   currentFilter = clickedButton.id;
   debouncedUpdatePhotos();
 };
@@ -69,6 +73,7 @@ const onFilterClick = (evt) => {
 const initFilters = (loadedPhotos) => {
   photos = loadedPhotos.slice();
   filtersContainerElement.classList.remove('img-filters--inactive');
+  activeFilterButton = filtersFormElement.querySelector('.img-filters__button--active');
   filtersFormElement.addEventListener('click', onFilterClick);
 };
 
