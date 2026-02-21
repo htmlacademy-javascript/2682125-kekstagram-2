@@ -6,6 +6,7 @@ const SCALE_STEP = 25;
 const SCALE_MIN = 25;
 const SCALE_MAX = 100;
 const DEFAULT_SCALE = 100;
+const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
 const EFFECTS = {
   none: null,
@@ -61,9 +62,10 @@ const effectLevelElement = document.querySelector('.img-upload__effect-level');
 const effectValueElement = document.querySelector('.effect-level__value');
 const effectSliderElement = document.querySelector('.effect-level__slider');
 const previewImageElement = document.querySelector('.img-upload__preview img');
+const effectsPreviewElements = document.querySelectorAll('.effects__preview');
 
-const successTemplate = document.querySelector('#success').content.querySelector('.success');
-const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+const successTemplateElement = document.querySelector('#success').content.querySelector('.success');
+const errorTemplateElement = document.querySelector('#error').content.querySelector('.error');
 
 const MessageType = {
   SUCCESS: 'success',
@@ -72,6 +74,7 @@ const MessageType = {
 
 let activeMessage = null;
 let onMessageKeydown = null;
+let currentImageUrl = null;
 
 const removeActiveMessage = () => {
   if (!activeMessage) {
@@ -87,7 +90,7 @@ const removeActiveMessage = () => {
 const showMessage = (type) => {
   removeActiveMessage();
 
-  const template = type === MessageType.SUCCESS ? successTemplate : errorTemplate;
+  const template = type === MessageType.SUCCESS ? successTemplateElement : errorTemplateElement;
   const messageElement = template.cloneNode(true);
 
   const closeButton = messageElement.querySelector('button');
@@ -273,6 +276,15 @@ const resetForm = () => {
   pristine.reset();
   resetEditor();
   previewImageElement.src = 'img/upload-default-image.jpg';
+
+  if (currentImageUrl) {
+    URL.revokeObjectURL(currentImageUrl);
+    currentImageUrl = null;
+  }
+
+  effectsPreviewElements.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
 };
 
 const closeForm = () => {
@@ -322,6 +334,31 @@ const openForm = () => {
 };
 
 const onFileInputChange = () => {
+  const file = fileInputElement.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  const fileName = file.name.toLowerCase();
+  const isValidType = FILE_TYPES.some((type) => fileName.endsWith(type));
+
+  if (!isValidType) {
+    return;
+  }
+
+  if (currentImageUrl) {
+    URL.revokeObjectURL(currentImageUrl);
+  }
+
+  currentImageUrl = URL.createObjectURL(file);
+
+  previewImageElement.src = currentImageUrl;
+
+  effectsPreviewElements.forEach((preview) => {
+    preview.style.backgroundImage = `url('${currentImageUrl}')`;
+  });
+
   openForm();
 };
 
