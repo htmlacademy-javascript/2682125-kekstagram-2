@@ -2,9 +2,9 @@
 const checkStringLength = (string, maxLength) => string.length <= maxLength;
 
 // Usage examples:
-checkStringLength('проверяемая строка', 20); // true
-checkStringLength('проверяемая строка', 18); // true
-checkStringLength('проверяемая строка', 10); // false
+checkStringLength('проверяемая строка', 20);
+checkStringLength('проверяемая строка', 18);
+checkStringLength('проверяемая строка', 10);
 
 // Function to check if a string is a palindrome
 const isPalindrome = (string) => {
@@ -24,10 +24,10 @@ const isPalindrome = (string) => {
 };
 
 // Usage examples:
-isPalindrome('топот'); // true
-isPalindrome('ДовОд'); // true
-isPalindrome('Кекс'); // false
-isPalindrome('Лёша на полке клопа нашёл '); // true
+isPalindrome('топот');
+isPalindrome('ДовОд');
+isPalindrome('Кекс');
+isPalindrome('Лёша на полке клопа нашёл ');
 
 const isMeetingWithinWorkday = (workdayStart, workdayEnd, meetingStart, meetingDuration) => {
   const timeToMinutes = (timeString) => {
